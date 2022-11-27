@@ -1,0 +1,128 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor}
+\usepackage{pgfplots}
+\usepackage{fullpage}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{scrextend}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tikz}
+\usetikzlibrary{arrows,
+                backgrounds,
+                fit,
+                positioning,
+                quotes,
+                shapes,
+                datavisualization}
+
+%\pagecolor[rgb]{0,0,0}
+%\pagecolor[rgb]{0.0549,0.0667,0.0862}
+\iffalse
+\pagecolor[rgb]{0.1269, 0.1369, 0.1469}
+\color[rgb]{1,1,1}
+\fi
+
+\newenvironment{subs}
+  {\adjustwidth{3em}{0pt}}
+  {\endadjustwidth}
+
+
+\title{\vspace{-1cm} \Huge Project 2 - Thread Pool\\ \LARGE CmpE 322, Operating Systems, Fall 2022 }
+\author{
+    Bahadır Gezer - 2020400039
+}
+
+\begin{document}
+\maketitle
+
+\subsection*{Implementation Details}
+\indent \indent This project spans three source files. Two of them \verb|operations.cpp/.h| has the 10 operations implemented in it. These implementations assume that the input array is unsorted. The last file has the main function. \texttt{pthreads} are used inside the main function. The number of threads used depend on the second program argument. These threads are created to form a thread pool. Then the operations are fairly distributed to the available threads in this pool. I did not implement sub-array operations so the number of threads do not exceed 10. But other than that any number of threads is accepted. Timing is done through the monotonic clock using the \texttt{clock\_gettime} function.
+
+\subsection*{Threading Analysis}
+\indent \indent In this thread-pool example we can see that there are performance gains up until 4 to 5 threads. After that point however there are no more gains to be had. This might be because of the amount of parallelism the CPU can handle, or because of thread creation overhead, or because of the task distribution overhead. Whatever it might be the case we can see a lower bound in execution times when we have more than 5 threads.
+\\ \\
+\indent It should also be pointed out that there is a massive performance gain when going from 1 thread to 2 or three threads. This increase is the initial gains from parallelism. These gains drop of as marginal returns from extra threads diminish.
+
+\subsection*{Run Configuration}
+The \texttt{make} command will compile, assemble and run the program correctly. It uses 100.000 sized array and 10 threads by default. To run the program on your own write \texttt{./out/prog <array size> <number of threads>} to the terminal.
+
+
+\tikz \datavisualization data group {threads} = {
+    data [set=threads 100.000] {
+      threads, time
+    1, 1.00000
+    2, 0.38404
+    3, 0.01320
+    4, 0.00691
+    5, 0.00377
+    6, 0.00000
+    7, 0.00000
+    8, 0.00063
+    9, 0.00063
+    10, 0.00000
+    }
+    data [set=threads 10.000] {
+      threads, time
+    1, 1.00000
+    2, 0.18554
+    3, 0.10197
+    4, 0.08319
+    5, 0.00733
+    6, 0.01868
+    7, 0.02400
+    8, 0.01783
+    9, 0.01410
+    10, 0.00000
+    }
+    data [set=threads 50.000] {
+      threads, time
+    1, 1.00000
+    2, 0.32647
+    3, 0.00335
+    4, 0.00592
+    5, 0.00440
+    6, 0.00000
+    7, 0.00460
+    8, 0.00370
+    9, 0.00615
+    10, 0.00462
+    }
+  };
+
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  \datavisualization
+
+  %[scientific axes=clean, y axis=grid,
+  %visualize as smooth line/.list={a,b},
+  %style sheet=strong colors,
+  %a={label in legend={text=100.000 threads}},
+  %b={label in legend={text=10.000 threads}},]
+    [scientific axes=clean,
+    x axis={attribute=threads, label={Number of threads}},
+    y axis ={attribute=time, label={Elapsed time}},
+    style sheet=strong colors,
+    visualize as line/.list={threads 100.000, threads 10.000, threads 50.000},
+    threads 10.000={label in legend={text=100.000 threads}},
+    threads 10.000={label in legend={text=10.000 threads}},
+    threads 50.000={label in legend={text=50.000 threads}},
+    ] data group {threads};
+
+\end{tikzpicture}
+\caption{Normalized thread running times.}
+\label{Normalized thread running times.}
+\end{figure}
+
+\end{document}

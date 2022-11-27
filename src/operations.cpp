@@ -1,12 +1,10 @@
 //
 // Created by Bahadır Gezer on 27.11.2022.
 //
-
-#include <utility>
 #include "operations.h"
 
-int min(const int *array, int length) {
-    int min = array[0];
+double min(const int *array, int length) {
+    double min = array[0];
     for (int i = 1; i < length; i++) {
         if (array[i] < min)
             min = array[i];
@@ -14,8 +12,8 @@ int min(const int *array, int length) {
     return min;
 }
 
-int max(const int *array, int length) {
-    int max = array[0];
+double max(const int *array, int length) {
+    double max = array[0];
     for (int i = 1; i < length; i++) {
         if (array[i] > max)
             max = array[i];
@@ -23,19 +21,19 @@ int max(const int *array, int length) {
     return max;
 }
 
-std::pair<int, int> range(const int *array, int length) {
-    int min = array[0];
-    int max = array[0];
+double range(const int *array, int length) {
+    double min = array[0];
+    double max = array[0];
     for (int i = 1; i < length; i++) {
         if (array[i] < min)
             min = array[i];
         if (array[i] > max)
             max = array[i];
     }
-    return std::make_pair(min, max);
+    return max - min;
 }
 
-int mode(const int *array, int length) {
+double mode(const int *array, int length) {
     int mode = array[0];
     int mode_count = 1;
     for (int i = 1; i < length; i++) {
@@ -49,7 +47,7 @@ int mode(const int *array, int length) {
             mode_count = count;
         }
     }
-    return mode;
+    return (double) mode;
 }
 
 double median(const int *array, int length) {
@@ -75,8 +73,8 @@ double median(const int *array, int length) {
     return median;
 }
 
-int sum(const int *array, int length) {
-    int sum = 0;
+double sum(const int *array, int length) {
+    double sum = 0;
     for (int i = 0; i < length; i++) {
         sum += array[i];
     }
@@ -84,17 +82,17 @@ int sum(const int *array, int length) {
 }
 
 double arithmetic_mean(const int *array, int length) {
-    int sum = 0;
+    double sum = 0;
     for (int i = 0; i < length; i++) {
         sum += array[i];
     }
     return sum / length;
 }
 
-int harmonic_mean(const int *array, int length) {
-    int sum = 0;
+double harmonic_mean(const int *array, int length) {
+    double sum = 0;
     for (int i = 0; i < length; i++) {
-        sum += 1 / array[i];
+        sum += 1 / (double) array[i];
     }
     return length / sum;
 }
@@ -108,7 +106,7 @@ double standart_deviation(const int *array, int length) {
     return sum / length;
 }
 
-int interquartile_range(const int *array, int length) {
+double interquartile_range(const int *array, int length) {
     int *sorted_array = new int[length];
     for (int i = 0; i < length; i++) {
         sorted_array[i] = array[i];
@@ -122,7 +120,7 @@ int interquartile_range(const int *array, int length) {
             }
         }
     }
-    int q1, q3;
+    double q1, q3;
     if (length % 2 == 0) {
         q1 = (sorted_array[length / 4] + sorted_array[length / 4 - 1]) / 2;
         q3 = (sorted_array[length * 3 / 4] + sorted_array[length * 3 / 4 - 1]) / 2;
